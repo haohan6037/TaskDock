@@ -10,6 +10,21 @@
       "scaffold_test"
     ],
     "cost_level": "free",
+    "risk_level": "low",
+    "fallback": true
+  },
+  "doc-worker": {
+    "type": "doc",
+    "endpoint": "http://localhost:8812/run-task",
+    "docker_service": "doc-worker",
+    "model": "none",
+    "skills": [
+      "markdown_formatting",
+      "summarization_structure",
+      "proposal_formatting",
+      "section_outline_generation"
+    ],
+    "cost_level": "free",
     "risk_level": "low"
   }
 }

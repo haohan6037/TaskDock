@@ -9,9 +9,28 @@ def load_workers() -> dict:
 
 def choose_worker(task_text: str) -> dict:
     """
-    Stage 1 routing:
-    Always use base-worker.
-    Later this should route by task type and skills.
+    Stage 2 routing:
+    Use doc-worker for obvious document tasks when registered.
+    Keep base-worker as fallback.
     """
     workers = load_workers()
+    lowered = task_text.lower()
+    doc_markers = [
+        "markdown",
+        "document",
+        "documentation",
+        "summary",
+        "summarize",
+        "proposal",
+        "format",
+        "outline",
+        "文档",
+        "总结",
+        "摘要",
+        "提案",
+        "格式",
+        "大纲",
+    ]
+    if "doc-worker" in workers and any(marker in lowered for marker in doc_markers):
+        return workers["doc-worker"]
     return workers["base-worker"]

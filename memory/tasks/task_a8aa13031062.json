@@ -1,0 +1,41 @@
+{
+  "task_id": "task_a8aa13031062",
+  "status": "success",
+  "input": "Format this proposal as Markdown sections.",
+  "worker": {
+    "type": "doc",
+    "endpoint": "http://localhost:8812/run-task",
+    "docker_service": "doc-worker",
+    "model": "none",
+    "skills": [
+      "markdown_formatting",
+      "summarization_structure",
+      "proposal_formatting",
+      "section_outline_generation"
+    ],
+    "cost_level": "free",
+    "risk_level": "low"
+  },
+  "proposal_id": null,
+  "started_at": "2026-06-03T06:51:19.732715+00:00",
+  "finished_at": "2026-06-03T06:51:19.745770+00:00",
+  "result": {
+    "task_id": "task_a8aa13031062",
+    "status": "success",
+    "worker": "doc-worker",
+    "model": "none",
+    "received_task_type": "scaffold_test",
+    "memory_loaded": true,
+    "memory_preview": "## User Profile\n# User Profile Memory\n\n- Preferred language: Chinese / Mandarin.\n- Environment: Mac mini, Docker, local automation.\n- Project direction: OpenClaw as host brain, Docker containers as workers.\n- Preference: downloaded/generated files should use English file names.\n\n\n## Project Memory\n# Project Memory: OpenClaw Brain\n\n## Goal\n\nBuild a host-based OpenClaw Brain system.\n\n## Core principles\n\n- OpenClaw should run on the host machine.\n- Docker containers should be workers.\n- Workers should be lightweight HTTP services.\n- Workers should be stateless by default.\n- Memory should be external and retrieved on demand.\n- The Brain should route tasks, verify results, and save useful task history.\n\n\n## Decision Memory\n# Decision Memory: OpenClaw Brain\n\n## Decision 1: OpenClaw runs on host\n",
+    "memory_boundary": "doc-worker only uses memory_context from the request and does not read long-term memory.",
+    "output_format": "markdown",
+    "markdown": "# Proposal Draft\n\nStatus: proposed\n\nRequires approval before implementation: yes\n\n## Goal\n\nFormat this proposal as Markdown sections.\n\n## Motivation\n\nTBD\n\n## Proposed New Files\n\n- TBD\n\n## Proposed Modified Files\n\n- TBD\n\n## Why This Shape\n\nTBD\n\n## Risk Level\n\nTBD\n\n## Validation Plan\n\nTBD\n\n## Approval\n\nThis proposal is not approved yet.\n",
+    "cost_estimate": {
+      "model": "none",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_cost": 0
+    }
+  },
+  "error": null
+}

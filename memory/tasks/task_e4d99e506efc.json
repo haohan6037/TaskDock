@@ -1,0 +1,39 @@
+{
+  "task_id": "task_e4d99e506efc",
+  "status": "success",
+  "input": "Test the first OpenClaw Brain worker and confirm external memory loading.",
+  "worker": {
+    "type": "base",
+    "endpoint": "http://localhost:8811/run-task",
+    "docker_service": "base-worker",
+    "model": "none",
+    "skills": [
+      "echo",
+      "task_understanding",
+      "scaffold_test"
+    ],
+    "cost_level": "free",
+    "risk_level": "low",
+    "fallback": true
+  },
+  "proposal_id": null,
+  "started_at": "2026-06-03T06:51:14.625988+00:00",
+  "finished_at": "2026-06-03T06:51:14.641792+00:00",
+  "result": {
+    "task_id": "task_e4d99e506efc",
+    "status": "success",
+    "worker": "base-worker",
+    "received_task_type": "scaffold_test",
+    "summary": "Task received: Test the first OpenClaw Brain worker and confirm external memory loading.",
+    "memory_loaded": true,
+    "memory_preview": "## User Profile\n# User Profile Memory\n\n- Preferred language: Chinese / Mandarin.\n- Environment: Mac mini, Docker, local automation.\n- Project direction: OpenClaw as host brain, Docker containers as workers.\n- Preference: downloaded/generated files should use English file names.\n\n\n## Project Memory\n# Project Memory: OpenClaw Brain\n\n## Goal\n\nBuild a host-based OpenClaw Brain system.\n\n## Core principles\n\n- OpenClaw should run on the host machine.\n- Docker containers should be workers.\n- Workers should be lightweight HTTP services.\n- Workers should be stateless by default.\n- Memory should be external and retrieved on demand.\n- The Brain should route tasks, verify results, and save useful task history.\n\n\n## Decision Memory\n# Decision Memory: OpenClaw Brain\n\n## Decision 1: OpenClaw runs on host\n",
+    "recommendation": "This is the base test worker. In the next stage, route coding tasks to code-worker, document tasks to doc-worker, and data tasks to data-worker.",
+    "cost_estimate": {
+      "model": "none",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "estimated_cost": 0
+    }
+  },
+  "error": null
+}

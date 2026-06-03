@@ -9,3 +9,16 @@ services:
       - ./workspaces:/workspaces
     environment:
       - WORKER_NAME=base-worker
+      - WORKER_MODEL=none
+
+  doc-worker:
+    build:
+      context: ./workers/doc-worker
+    container_name: openclawbrain-doc-worker
+    ports:
+      - "8812:8812"
+    volumes:
+      - ./workspaces:/workspaces
+    environment:
+      - WORKER_NAME=doc-worker
+      - WORKER_MODEL=none
