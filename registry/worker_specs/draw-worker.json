@@ -1,0 +1,15 @@
+{
+  "worker_name": "draw-worker",
+  "worker_type": "draw",
+  "runtime": "python",
+  "preferred_model": "none",
+  "port": 8817,
+  "skills": [
+    "python"
+  ],
+  "purpose": "generate picture",
+  "risk_level": "low",
+  "permissions": [],
+  "status": "draft",
+  "created_at": "2026-06-03T12:02:34.923021+00:00"
+}

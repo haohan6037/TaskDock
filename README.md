@@ -133,6 +133,25 @@ Test dispatcher routing:
 .venv/bin/python brain/dispatcher.py "Format this proposal as Markdown sections."
 ```
 
+## Worker Specs
+
+TaskDock Control Panel can manage draft worker specs under `registry/worker_specs/`.
+
+Creating a worker spec:
+
+- creates only `registry/worker_specs/{worker_name}.json`
+- sets `status` to `draft`
+- does not create a real worker
+- does not create `workers/{worker_name}`
+- does not modify `docker-compose.yml`
+- does not modify `registry/workers.json`
+
+Open the Worker Specs page:
+
+```text
+http://127.0.0.1:8890/worker-specs
+```
+
 ## Next stage
 
 - Add code-worker

@@ -86,7 +86,7 @@ def page(content: list[str]) -> str:
         "<body><main>",
         "<h1>TaskDock Control Panel MVP</h1>",
         '<p class="notice">Local only: run with 127.0.0.1:8890. This MVP has no commit, push, or proposal creation actions.</p>',
-        '<nav><a href="/">Dashboard</a><a href="/workers">Workers</a><a href="/proposals">Proposals</a><a href="/validate">Validation</a></nav>',
+        '<nav><a href="/">Dashboard</a><a href="/workers">Workers</a><a href="/worker-specs">Worker Specs</a><a href="/proposals">Proposals</a><a href="/validate">Validation</a></nav>',
         *content,
         "</main></body></html>",
     ]

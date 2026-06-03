@@ -1,0 +1,67 @@
+from __future__ import annotations
+
+import html
+import json
+from pathlib import Path
+
+PROJECT_ROOT = Path("/Users/happyfamily/OpenClawBrain")
+
+
+def worker_spec_form(created_path: Path | None = None) -> str:
+    message = ""
+    if created_path:
+        message = f"<p class=\"pass\">Created worker spec: {html.escape(str(created_path.relative_to(PROJECT_ROOT)))}</p>"
+    return (
+        "<section><h2>Create Worker Spec</h2>"
+        "<p class=\"notice\">Creates a draft JSON spec only. It does not create workers, edit Docker Compose, edit registry/workers.json, commit, or push.</p>"
+        f"{message}"
+        '<form method="post" action="/worker-specs">'
+        '<label>worker_name <input name="worker_name" placeholder="data-worker" required></label>'
+        '<label>worker_type <input name="worker_type" placeholder="data" required></label>'
+        '<label>runtime <input name="runtime" placeholder="python" required></label>'
+        '<label>preferred_model <input name="preferred_model" value="none"></label>'
+        '<label>port <input name="port" placeholder="8813" required></label>'
+        '<label>skills <input name="skills" placeholder="csv, excel, python-analysis" required></label>'
+        '<label>purpose <input name="purpose" placeholder="CSV / Excel / Python analysis" required></label>'
+        '<label>risk_level <input name="risk_level" value="low"></label>'
+        '<label>permissions <input name="permissions" placeholder="read-workspace-files"></label>'
+        '<button type="submit">Create Worker Spec</button>'
+        "</form></section>"
+    )
+
+
+def worker_specs_section(specs: list[dict]) -> str:
+    if not specs:
+        return "<section><h2>Worker Specs</h2><p>No worker specs found.</p></section>"
+
+    rows = []
+    for item in specs:
+        data = item.get("data", {})
+        if item.get("error"):
+            rows.append(
+                "<tr>"
+                f"<td>{html.escape(item['file'])}</td>"
+                "<td colspan=\"6\"><strong class=\"fail\">invalid json</strong></td>"
+                f"<td><pre>{html.escape(item['error'])}</pre></td>"
+                "</tr>"
+            )
+            continue
+        rows.append(
+            "<tr>"
+            f"<td>{html.escape(data.get('worker_name', item['file']))}</td>"
+            f"<td>{html.escape(data.get('worker_type', ''))}</td>"
+            f"<td>{html.escape(data.get('runtime', ''))}</td>"
+            f"<td>{html.escape(data.get('preferred_model', ''))}</td>"
+            f"<td>{html.escape(str(data.get('port', '')))}</td>"
+            f"<td>{html.escape(data.get('risk_level', ''))}</td>"
+            f"<td><strong>{html.escape(data.get('status', 'draft'))}</strong></td>"
+            f"<td><details><summary>json</summary><pre>{html.escape(json.dumps(data, ensure_ascii=False, indent=2))}</pre></details></td>"
+            "</tr>"
+        )
+
+    return (
+        "<section><h2>Worker Specs</h2>"
+        "<table><thead><tr><th>name</th><th>type</th><th>runtime</th><th>model</th><th>port</th><th>risk</th><th>status</th><th>details</th></tr></thead>"
+        f"<tbody>{''.join(rows)}</tbody></table>"
+        "</section>"
+    )
