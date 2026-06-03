@@ -11,4 +11,4 @@ source .venv/bin/activate
 
 pip install -r control_panel/requirements.txt
 
-uvicorn control_panel.app:app --host 127.0.0.1 --port 8890
+uvicorn control_panel.app:app --host 127.0.0.1 --port 8890 --reload

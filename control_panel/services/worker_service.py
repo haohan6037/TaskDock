@@ -6,12 +6,7 @@ from typing import Dict
 import requests
 
 from control_panel.command_whitelist import CommandResult, run_allowed
-
-
-LOCAL_HEALTH_ENDPOINTS = {
-    "base-worker": "http://127.0.0.1:8811/health",
-    "doc-worker": "http://127.0.0.1:8812/health",
-}
+from control_panel.services.filesystem_service import load_worker_registry
 
 
 @dataclass
@@ -31,7 +26,9 @@ def compose_up() -> CommandResult:
 
 
 def check_worker_health(worker: str) -> HealthResult:
-    url = LOCAL_HEALTH_ENDPOINTS[worker]
+    workers = load_worker_registry()
+    endpoint = workers[worker]["endpoint"]
+    url = endpoint.replace("/run-task", "/health").replace("localhost", "127.0.0.1")
     try:
         response = requests.get(url, timeout=5)
         return HealthResult(worker=worker, url=url, passed=response.ok, output=response.text)
@@ -40,4 +37,4 @@ def check_worker_health(worker: str) -> HealthResult:
 
 
 def check_all_health() -> Dict[str, HealthResult]:
-    return {worker: check_worker_health(worker) for worker in LOCAL_HEALTH_ENDPOINTS}
+    return {worker: check_worker_health(worker) for worker in load_worker_registry()}

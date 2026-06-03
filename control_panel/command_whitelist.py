@@ -32,6 +32,7 @@ ALLOWED_COMMANDS = {
     "docker_compose_config": ["docker", "compose", "config"],
     "compile_doc_worker": ["python3", "-m", "py_compile", "workers/doc-worker/app.py", "brain/worker_registry.py"],
     "json_workers": ["python3", "-m", "json.tool", "registry/workers.json"],
+    "run_dispatcher": [".venv/bin/python", "brain/dispatcher.py"],
 }
 
 
@@ -43,6 +44,10 @@ def run_allowed(name: str, extra_args: Optional[List[str]] = None) -> CommandRes
     if name == "git_commit":
         if not extra_args or len(extra_args) != 1 or not extra_args[0].strip():
             raise ValueError("git_commit requires one non-empty commit message.")
+        command.append(extra_args[0].strip())
+    elif name == "run_dispatcher":
+        if not extra_args or len(extra_args) != 1 or not extra_args[0].strip():
+            raise ValueError("run_dispatcher requires one non-empty task.")
         command.append(extra_args[0].strip())
     elif extra_args:
         raise ValueError(f"Command {name} does not accept extra arguments.")

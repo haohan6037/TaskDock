@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 
+import json
+
 from control_panel.command_whitelist import CommandResult, run_allowed
 from control_panel.services.worker_service import check_all_health, compose_ps
 
@@ -33,6 +35,38 @@ def command_step(name: str, checks: str, operation: str, result: CommandResult) 
     if result.stderr:
         output = f"{output}\n{result.stderr}".strip()
     return ValidationStep(name=name, checks=checks, operation=operation, passed=result.passed, output=output)
+
+
+def run_dispatcher(task: str) -> CommandResult:
+    return run_allowed("run_dispatcher", [task])
+
+
+def extract_json_object(output: str) -> dict:
+    start = output.find("{")
+    end = output.rfind("}")
+    if start == -1 or end == -1 or end <= start:
+        raise ValueError("No JSON object found in dispatcher output.")
+    return json.loads(output[start : end + 1])
+
+
+def dispatcher_step(name: str, task: str, expected_worker: str) -> ValidationStep:
+    result = run_dispatcher(task)
+    output = result.stdout
+    if result.stderr:
+        output = f"{output}\n{result.stderr}".strip()
+    passed = False
+    try:
+        payload = extract_json_object(output)
+        passed = result.passed and payload.get("status") == "success" and payload.get("result", {}).get("worker") == expected_worker
+    except Exception:
+        passed = False
+    return ValidationStep(
+        name=name,
+        checks=f"Dispatcher returns top-level success and result.worker is {expected_worker}.",
+        operation=f".venv/bin/python brain/dispatcher.py {task}",
+        passed=passed,
+        output=output,
+    )
 
 
 def route_check_step() -> ValidationStep:
@@ -92,6 +126,8 @@ def run_validation() -> List[ValidationStep]:
             compose_ps(),
         ),
         *health_steps(),
+        dispatcher_step("base dispatcher", "Run a generic scaffold test.", "base-worker"),
+        dispatcher_step("doc-worker routing", "Format this proposal as Markdown sections.", "doc-worker"),
         route_check_step(),
     ]
     LATEST_VALIDATION = steps
