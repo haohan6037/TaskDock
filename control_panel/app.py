@@ -62,12 +62,24 @@ def worker_health_result(url: str) -> dict:
         return {"passed": False, "output": str(exc)}
 
 
+def extract_json_object(output: str) -> dict:
+    start = output.find("{")
+    end = output.rfind("}")
+    if start == -1 or end == -1 or end <= start:
+        raise ValueError("No JSON object found in dispatcher output.")
+    return json.loads(output[start : end + 1])
+
+
 def dispatcher_result(task: str, expected_worker: str) -> dict:
     result = run_fixed_result([".venv/bin/python", "brain/dispatcher.py", task])
     passed = False
     try:
-        payload = json.loads(result["output"])
-        passed = result["passed"] and payload.get("worker", {}).get("docker_service") == expected_worker
+        payload = extract_json_object(result["output"])
+        passed = (
+            result["passed"]
+            and payload.get("status") == "success"
+            and payload.get("result", {}).get("worker") == expected_worker
+        )
     except Exception:
         passed = False
     return {"passed": passed, "output": result["output"]}
