@@ -1,0 +1,11 @@
+services:
+  base-worker:
+    build:
+      context: ./workers/base-worker
+    container_name: openclawbrain-base-worker
+    ports:
+      - "8811:8811"
+    volumes:
+      - ./workspaces:/workspaces
+    environment:
+      - WORKER_NAME=base-worker

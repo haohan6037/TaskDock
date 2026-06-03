@@ -1,0 +1,15 @@
+{
+  "base-worker": {
+    "type": "base",
+    "endpoint": "http://localhost:8811/run-task",
+    "docker_service": "base-worker",
+    "model": "none",
+    "skills": [
+      "echo",
+      "task_understanding",
+      "scaffold_test"
+    ],
+    "cost_level": "free",
+    "risk_level": "low"
+  }
+}
