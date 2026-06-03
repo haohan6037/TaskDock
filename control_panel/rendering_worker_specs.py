@@ -30,9 +30,12 @@ def worker_spec_form(created_path: Path | None = None) -> str:
     )
 
 
-def worker_specs_section(specs: list[dict]) -> str:
+def worker_specs_section(specs: list[dict], generated_path: Path | None = None) -> str:
+    message = ""
+    if generated_path:
+        message = f"<p class=\"pass\">Generated proposal: {html.escape(str(generated_path.relative_to(PROJECT_ROOT)))}</p>"
     if not specs:
-        return "<section><h2>Worker Specs</h2><p>No worker specs found.</p></section>"
+        return f"<section><h2>Worker Specs</h2>{message}<p>No worker specs found.</p></section>"
 
     rows = []
     for item in specs:
@@ -55,13 +58,26 @@ def worker_specs_section(specs: list[dict]) -> str:
             f"<td>{html.escape(str(data.get('port', '')))}</td>"
             f"<td>{html.escape(data.get('risk_level', ''))}</td>"
             f"<td><strong>{html.escape(data.get('status', 'draft'))}</strong></td>"
-            f"<td><details><summary>json</summary><pre>{html.escape(json.dumps(data, ensure_ascii=False, indent=2))}</pre></details></td>"
+            f"<td>{generate_action(data)}<details><summary>json</summary><pre>{html.escape(json.dumps(data, ensure_ascii=False, indent=2))}</pre></details></td>"
             "</tr>"
         )
 
     return (
         "<section><h2>Worker Specs</h2>"
+        f"{message}"
         "<table><thead><tr><th>name</th><th>type</th><th>runtime</th><th>model</th><th>port</th><th>risk</th><th>status</th><th>details</th></tr></thead>"
         f"<tbody>{''.join(rows)}</tbody></table>"
         "</section>"
+    )
+
+
+def generate_action(data: dict) -> str:
+    if data.get("status") != "draft":
+        return ""
+    worker_name = html.escape(data.get("worker_name", ""))
+    return (
+        '<form method="post" action="/worker-specs/generate-proposal" style="margin-bottom:8px">'
+        f'<input type="hidden" name="worker_name" value="{worker_name}">'
+        '<button type="submit">Generate Proposal</button>'
+        "</form>"
     )
