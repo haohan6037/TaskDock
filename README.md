@@ -152,6 +152,31 @@ Open the Worker Specs page:
 http://127.0.0.1:8890/worker-specs
 ```
 
+## Standard Worker Template Generator
+
+TaskDock can generate a runnable worker from a draft worker spec using the first standard adapter template: `worker_templates/fastapi-basic/`.
+
+The `fastapi-basic` template creates:
+
+- `workers/{worker_name}/Dockerfile`
+- `workers/{worker_name}/app.py`
+- `workers/{worker_name}/requirements.txt`
+- `memory/prompts/{worker_name}.md`
+
+It also updates:
+
+- `docker-compose.yml`
+- `registry/workers.json`
+
+Generated workers expose:
+
+- `GET /health`
+- `POST /run-task`
+
+Generated workers are `model: none` in this first version. They do not call a real LLM, do not read `memory/`, and only use `memory_context` passed in the request.
+
+FastAPI is only the first adapter template. Future approved templates may support `codex-cli`, `openclaw`, `ollama`, `python-tool`, or other runtimes.
+
 ## Next stage
 
 - Add code-worker

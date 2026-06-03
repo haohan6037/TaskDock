@@ -30,10 +30,23 @@ def worker_spec_form(created_path: Path | None = None) -> str:
     )
 
 
-def worker_specs_section(specs: list[dict], generated_path: Path | None = None) -> str:
+def worker_specs_section(specs: list[dict], generated_path: Path | None = None, generated_worker: object | None = None, error: str = "") -> str:
     message = ""
     if generated_path:
         message = f"<p class=\"pass\">Generated proposal: {html.escape(str(generated_path.relative_to(PROJECT_ROOT)))}</p>"
+    if generated_worker:
+        created = "".join(
+            f"<li>{html.escape(str(path.relative_to(PROJECT_ROOT)))}</li>" for path in generated_worker.created_files
+        )
+        modified = "".join(
+            f"<li>{html.escape(str(path.relative_to(PROJECT_ROOT)))}</li>" for path in generated_worker.modified_files
+        )
+        message += (
+            f"<p class=\"pass\">Generated worker: {html.escape(generated_worker.worker_name)}</p>"
+            f"<details open><summary>generated files</summary><ul>{created}</ul><p>modified files:</p><ul>{modified}</ul></details>"
+        )
+    if error:
+        message += f"<p class=\"fail\">Worker generation failed: {html.escape(error)}</p>"
     if not specs:
         return f"<section><h2>Worker Specs</h2>{message}<p>No worker specs found.</p></section>"
 
@@ -58,7 +71,7 @@ def worker_specs_section(specs: list[dict], generated_path: Path | None = None) 
             f"<td>{html.escape(str(data.get('port', '')))}</td>"
             f"<td>{html.escape(data.get('risk_level', ''))}</td>"
             f"<td><strong>{html.escape(data.get('status', 'draft'))}</strong></td>"
-            f"<td>{generate_action(data)}<details><summary>json</summary><pre>{html.escape(json.dumps(data, ensure_ascii=False, indent=2))}</pre></details></td>"
+            f"<td>{generate_proposal_action(data)}{generate_worker_action(data)}<details><summary>json</summary><pre>{html.escape(json.dumps(data, ensure_ascii=False, indent=2))}</pre></details></td>"
             "</tr>"
         )
 
@@ -71,7 +84,7 @@ def worker_specs_section(specs: list[dict], generated_path: Path | None = None) 
     )
 
 
-def generate_action(data: dict) -> str:
+def generate_proposal_action(data: dict) -> str:
     if data.get("status") != "draft":
         return ""
     worker_name = html.escape(data.get("worker_name", ""))
@@ -79,5 +92,18 @@ def generate_action(data: dict) -> str:
         '<form method="post" action="/worker-specs/generate-proposal" style="margin-bottom:8px">'
         f'<input type="hidden" name="worker_name" value="{worker_name}">'
         '<button type="submit">Generate Proposal</button>'
+        "</form>"
+    )
+
+
+def generate_worker_action(data: dict) -> str:
+    if data.get("status") != "draft":
+        return ""
+    worker_name = html.escape(data.get("worker_name", ""))
+    return (
+        '<form method="post" action="/worker-specs/generate-worker" style="margin-bottom:8px">'
+        f'<input type="hidden" name="worker_name" value="{worker_name}">'
+        '<button type="submit">Generate Worker</button>'
+        '<p class="notice">Creates worker files and updates Docker Compose plus registry metadata.</p>'
         "</form>"
     )

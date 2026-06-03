@@ -1,0 +1,25 @@
+# {{WORKER_NAME}} Prompt
+
+Worker name: {{WORKER_NAME}}
+
+Worker type: {{WORKER_TYPE}}
+
+Runtime: {{RUNTIME}}
+
+Model: none
+
+Purpose: {{PURPOSE}}
+
+Skills:
+{{SKILLS_LIST}}
+
+Permissions:
+{{PERMISSIONS_LIST}}
+
+Risk level: {{RISK_LEVEL}}
+
+## Memory Boundary
+
+Long-term memory is owned by the Brain, not this worker.
+
+This worker must not read `memory/` directly. It may only use the `memory_context` field passed in each `/run-task` request.

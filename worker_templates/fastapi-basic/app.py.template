@@ -1,0 +1,61 @@
+from __future__ import annotations
+
+import os
+from typing import Any
+
+from fastapi import FastAPI
+from pydantic import BaseModel, Field
+
+
+WORKER_NAME = os.environ.get("WORKER_NAME", "{{WORKER_NAME}}")
+WORKER_TYPE = os.environ.get("WORKER_TYPE", "{{WORKER_TYPE}}")
+WORKER_MODEL = "none"
+WORKER_SKILLS = [
+    item.strip()
+    for item in os.environ.get("WORKER_SKILLS", "{{WORKER_SKILLS}}").split(",")
+    if item.strip()
+]
+
+app = FastAPI(title=f"{WORKER_NAME} adapter")
+
+
+class TaskRequest(BaseModel):
+    task_id: str
+    task_type: str
+    input: str
+    constraints: dict[str, Any] = Field(default_factory=dict)
+    memory_context: str = ""
+
+
+@app.get("/health")
+def health() -> dict[str, Any]:
+    return {
+        "status": "ok",
+        "worker": WORKER_NAME,
+        "type": WORKER_TYPE,
+        "model": WORKER_MODEL,
+        "skills": WORKER_SKILLS,
+    }
+
+
+@app.post("/run-task")
+def run_task(request: TaskRequest) -> dict[str, Any]:
+    memory_loaded = bool(request.memory_context.strip())
+    result = (
+        f"# {WORKER_NAME} result\n\n"
+        f"- task_id: {request.task_id}\n"
+        f"- task_type: {request.task_type}\n"
+        f"- model: {WORKER_MODEL}\n"
+        f"- memory_context_loaded: {str(memory_loaded).lower()}\n\n"
+        "This generated worker is a model:none FastAPI adapter. "
+        "It does not call a real LLM and only uses memory_context from the request."
+    )
+    return {
+        "task_id": request.task_id,
+        "status": "success",
+        "worker": WORKER_NAME,
+        "worker_type": WORKER_TYPE,
+        "model": WORKER_MODEL,
+        "memory_context_loaded": memory_loaded,
+        "result": result,
+    }
