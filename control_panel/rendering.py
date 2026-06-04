@@ -75,7 +75,7 @@ def page(content: list[str]) -> str:
         "main{max-width:1100px;margin:0 auto}",
         "nav a{margin-right:12px}",
         "section{background:white;border:1px solid #ddd;border-radius:8px;padding:16px;margin:16px 0}",
-        "form{display:grid;gap:10px;max-width:640px}label{display:grid;gap:4px;font-weight:600}input{padding:8px;border:1px solid #bbb;border-radius:6px}",
+        "form{display:grid;gap:10px;max-width:640px}label{display:grid;gap:4px;font-weight:600}input,textarea{padding:8px;border:1px solid #bbb;border-radius:6px;font:inherit}",
         "form.inline{display:inline-block;margin:0 4px 4px 0;max-width:none}",
         "button{padding:8px 12px;border:1px solid #777;border-radius:6px;background:#fff;cursor:pointer}",
         "table{width:100%;border-collapse:collapse;margin-top:12px}td,th{border-top:1px solid #ddd;padding:8px;text-align:left}",
@@ -87,7 +87,7 @@ def page(content: list[str]) -> str:
         "<body><main>",
         "<h1>TaskDock Control Panel MVP</h1>",
         '<p class="notice">Local only: run with 127.0.0.1:8890. This MVP has no commit, push, or proposal creation actions.</p>',
-        '<nav><a href="/">Dashboard</a><a href="/workers">Workers</a><a href="/worker-specs">Worker Specs</a><a href="/proposals">Proposals</a><a href="/validate">Validation</a></nav>',
+        '<nav><a href="/">Dashboard</a><a href="/workers">Workers</a><a href="/worker-specs">Worker Specs</a><a href="/brain-settings">Brain Settings</a><a href="/proposals">Proposals</a><a href="/validate">Validation</a></nav>',
         *content,
         "</main></body></html>",
     ]

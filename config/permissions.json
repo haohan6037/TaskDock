@@ -1,0 +1,50 @@
+{
+  "allowed_write_paths": [
+    "brain/",
+    "config/",
+    "control_panel/",
+    "memory/prompts/",
+    "memory/proposals/",
+    "registry/worker_specs/",
+    "worker_templates/",
+    "workers/"
+  ],
+  "protected_paths": [
+    "docker-compose.yml",
+    "registry/workers.json",
+    "workers/base-worker/",
+    "workers/doc-worker/",
+    "workers/demo-worker/"
+  ],
+  "allowed_operations": [
+    "read_files",
+    "write_approved_project_files",
+    "run_validation",
+    "git_commit_after_validation",
+    "docker_compose_config",
+    "docker_compose_worker_lifecycle"
+  ],
+  "forbidden_operations": [
+    "arbitrary_shell_command_execution",
+    "automatic_git_push",
+    "git_push_force",
+    "git_reset_hard",
+    "docker_run",
+    "delete_existing_worker",
+    "commit_memory_tasks",
+    "commit_logs",
+    "commit_workspaces",
+    "commit_venv",
+    "commit_temporary_test_files"
+  ],
+  "require_approval_for": [
+    "git_push",
+    "docker-compose.yml changes",
+    "registry/workers.json changes",
+    "base-worker changes",
+    "doc-worker changes",
+    "demo-worker changes",
+    "worker deletion",
+    "new runtime enforcement"
+  ]
+}

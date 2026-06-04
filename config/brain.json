@@ -1,0 +1,11 @@
+{
+  "brain_name": "OpenClaw Brain",
+  "runtime": "openclaw-host",
+  "working_directory": "/Users/happyfamily/OpenClawBrain",
+  "default_language": "zh-CN",
+  "auto_validation_enabled": true,
+  "auto_commit_enabled": true,
+  "auto_push_enabled": false,
+  "require_validation_before_commit": true,
+  "task_timeout_seconds": 120
+}
