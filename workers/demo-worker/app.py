@@ -7,8 +7,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
 
-WORKER_NAME = os.environ.get("WORKER_NAME", "draw-worker")
-WORKER_TYPE = os.environ.get("WORKER_TYPE", "draw")
+WORKER_NAME = os.environ.get("WORKER_NAME", "demo-worker")
+WORKER_TYPE = os.environ.get("WORKER_TYPE", "demo")
 WORKER_MODEL = "none"
 WORKER_SKILLS = [
     item.strip()

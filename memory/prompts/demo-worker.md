@@ -1,14 +1,14 @@
-# draw-worker Prompt
+# demo-worker Prompt
 
-Worker name: draw-worker
+Worker name: demo-worker
 
-Worker type: draw
+Worker type: demo
 
 Runtime: python
 
 Model: none
 
-Purpose: generate picture
+Purpose: demonstrate the standard model:none FastAPI worker template
 
 Skills:
 - python

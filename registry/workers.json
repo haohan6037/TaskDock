@@ -27,10 +27,10 @@
     "cost_level": "free",
     "risk_level": "low"
   },
-  "draw-worker": {
-    "type": "draw",
+  "demo-worker": {
+    "type": "demo",
     "endpoint": "http://localhost:8817/run-task",
-    "docker_service": "draw-worker",
+    "docker_service": "demo-worker",
     "model": "none",
     "skills": [
       "python"

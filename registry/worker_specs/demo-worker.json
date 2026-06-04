@@ -1,13 +1,13 @@
 {
-  "worker_name": "draw-worker",
-  "worker_type": "draw",
+  "worker_name": "demo-worker",
+  "worker_type": "demo",
   "runtime": "python",
   "preferred_model": "none",
   "port": 8817,
   "skills": [
     "python"
   ],
-  "purpose": "generate picture",
+  "purpose": "demonstrate the standard model:none FastAPI worker template",
   "risk_level": "low",
   "permissions": [],
   "status": "draft",

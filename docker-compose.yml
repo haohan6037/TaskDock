@@ -23,16 +23,16 @@ services:
       - WORKER_NAME=doc-worker
       - WORKER_MODEL=none
 
-  draw-worker:
+  demo-worker:
     build:
-      context: ./workers/draw-worker
-    container_name: openclawbrain-draw-worker
+      context: ./workers/demo-worker
+    container_name: openclawbrain-demo-worker
     ports:
       - "8817:8817"
     volumes:
       - ./workspaces:/workspaces
     environment:
-      - WORKER_NAME=draw-worker
-      - WORKER_TYPE=draw
+      - WORKER_NAME=demo-worker
+      - WORKER_TYPE=demo
       - WORKER_MODEL=none
       - WORKER_SKILLS=python
