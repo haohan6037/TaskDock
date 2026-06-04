@@ -76,6 +76,7 @@ def page(content: list[str]) -> str:
         "nav a{margin-right:12px}",
         "section{background:white;border:1px solid #ddd;border-radius:8px;padding:16px;margin:16px 0}",
         "form{display:grid;gap:10px;max-width:640px}label{display:grid;gap:4px;font-weight:600}input{padding:8px;border:1px solid #bbb;border-radius:6px}",
+        "form.inline{display:inline-block;margin:0 4px 4px 0;max-width:none}",
         "button{padding:8px 12px;border:1px solid #777;border-radius:6px;background:#fff;cursor:pointer}",
         "table{width:100%;border-collapse:collapse;margin-top:12px}td,th{border-top:1px solid #ddd;padding:8px;text-align:left}",
         "pre{white-space:pre-wrap;background:#111;color:#f4f4f4;padding:12px;border-radius:6px;overflow:auto}",
