@@ -24,6 +24,15 @@ User command
 
 ## Run
 
+### 0. Bootstrap a new machine
+
+```bash
+cd ~/OpenClawBrain
+./scripts/bootstrap.sh
+```
+
+Bootstrap checks Python, Docker, Docker Compose, required config files, the worker registry, and `docker-compose.yml`. It creates `.venv`, installs Brain and Control Panel requirements, and prints next-step commands. It does not start Docker workers, commit, push, or modify worker code.
+
 ### 1. Start workers
 
 ```bash
@@ -194,6 +203,16 @@ The worker runs a fixed validation flow and returns structured JSON with:
 - `commit_advice`
 
 It uses `model: none`, does not call a real LLM, does not commit, does not push, does not run `docker run`, and does not modify project files.
+
+## Setup Status
+
+TaskDock Control Panel includes a read-only Setup page:
+
+```text
+http://127.0.0.1:8890/setup
+```
+
+The page shows Python, Docker, Docker Compose, `.venv`, config, registry, and worker directory status. It uses fixed checks only and does not run arbitrary shell commands.
 
 ## Next stage
 
