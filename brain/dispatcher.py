@@ -23,6 +23,23 @@ def save_task_history(record: dict) -> Path:
     path.write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
     return path
 
+def health_url_for(worker: dict) -> str:
+    endpoint = worker.get("endpoint", "")
+    if endpoint.endswith("/run-task"):
+        url = endpoint[: -len("/run-task")] + "/health"
+    else:
+        url = endpoint.rstrip("/") + "/health"
+    return url.replace("localhost", "127.0.0.1")
+
+def check_worker_health(worker: dict) -> None:
+    worker_name = worker.get("docker_service") or worker.get("name") or "unknown-worker"
+    url = health_url_for(worker)
+    try:
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+    except Exception as exc:
+        raise RuntimeError(f"Selected worker {worker_name} is not healthy at {url}: {exc}") from exc
+
 def looks_like_implementation_task(task_text: str) -> bool:
     markers = [
         "implement",
@@ -80,6 +97,7 @@ def dispatch(task_text: str, proposal_id: Optional[str] = None) -> dict:
     started_at = now_iso()
 
     try:
+        check_worker_health(worker)
         response = requests.post(worker["endpoint"], json=payload, timeout=30)
         response.raise_for_status()
         worker_result = response.json()
