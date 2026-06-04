@@ -6,6 +6,9 @@ from pathlib import Path
 from typing import List, Optional
 
 import json
+import uuid
+
+import requests
 
 from control_panel.command_whitelist import CommandResult, run_allowed
 from control_panel.services.worker_service import check_all_health, compose_ps
@@ -28,6 +31,7 @@ class ValidationStep:
 
 
 LATEST_VALIDATION: Optional[List[ValidationStep]] = None
+VALIDATION_WORKER_URL = "http://127.0.0.1:8818/run-task"
 
 
 def command_step(name: str, checks: str, operation: str, result: CommandResult) -> ValidationStep:
@@ -100,37 +104,56 @@ def health_steps() -> List[ValidationStep]:
 
 def run_validation() -> List[ValidationStep]:
     global LATEST_VALIDATION
-    steps = [
-        command_step(
-            "Python compile",
-            "doc-worker app and worker registry compile.",
-            "python3 -m py_compile workers/doc-worker/app.py brain/worker_registry.py",
-            run_allowed("compile_doc_worker"),
-        ),
-        command_step(
-            "Worker registry JSON",
-            "registry/workers.json is valid JSON.",
-            "python3 -m json.tool registry/workers.json",
-            run_allowed("json_workers"),
-        ),
-        command_step(
-            "Docker Compose config",
-            "Docker Compose configuration is valid.",
-            "docker compose config",
-            run_allowed("docker_compose_config"),
-        ),
-        command_step(
-            "Docker Compose status",
-            "Worker status can be listed.",
-            "docker compose ps",
-            compose_ps(),
-        ),
-        *health_steps(),
-        dispatcher_step("base dispatcher", "Run a generic scaffold test.", "base-worker"),
-        dispatcher_step("doc-worker routing", "Format this proposal as Markdown sections.", "doc-worker"),
-        route_check_step(),
-    ]
+    steps = run_validation_worker()
     LATEST_VALIDATION = steps
+    return steps
+
+
+def run_validation_worker() -> List[ValidationStep]:
+    payload = {
+        "task_id": "control_panel_validation_" + uuid.uuid4().hex[:8],
+        "task_type": "validation",
+        "input": "Run TaskDock fixed validation flow.",
+        "constraints": {"output_format": "json"},
+        "memory_context": "",
+    }
+    try:
+        response = requests.post(VALIDATION_WORKER_URL, json=payload, timeout=180)
+        response.raise_for_status()
+        report = response.json()
+    except Exception as exc:
+        return [
+            ValidationStep(
+                name="validation-worker",
+                checks="validation-worker responds to POST /run-task.",
+                operation=f"POST {VALIDATION_WORKER_URL}",
+                passed=False,
+                output=str(exc),
+            )
+        ]
+
+    steps = []
+    for check in report.get("checks", []):
+        status = check.get("status") == "pass"
+        output = json.dumps(check, ensure_ascii=False, indent=2)
+        steps.append(
+            ValidationStep(
+                name=check.get("name", "unnamed check"),
+                checks=check.get("summary", ""),
+                operation="validation-worker fixed check",
+                passed=status,
+                output=output,
+            )
+        )
+    steps.append(
+        ValidationStep(
+            name="validation-worker overall",
+            checks="validation-worker report overall status is pass.",
+            operation=f"POST {VALIDATION_WORKER_URL}",
+            passed=report.get("overall") == "pass",
+            output=json.dumps(report, ensure_ascii=False, indent=2),
+        )
+    )
     return steps
 
 

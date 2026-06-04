@@ -177,6 +177,24 @@ Generated workers are `model: none` in this first version. They do not call a re
 
 FastAPI is only the first adapter template. Future approved templates may support `codex-cli`, `openclaw`, `ollama`, `python-tool`, or other runtimes.
 
+## Validation Worker
+
+`validation-worker` is a dedicated QA gate worker.
+
+It exposes:
+
+- `GET /health`
+- `POST /run-task`
+
+The worker runs a fixed validation flow and returns structured JSON with:
+
+- `overall`
+- `checks`
+- `git_summary`
+- `commit_advice`
+
+It uses `model: none`, does not call a real LLM, does not commit, does not push, does not run `docker run`, and does not modify project files.
+
 ## Next stage
 
 - Add code-worker

@@ -36,3 +36,19 @@ services:
       - WORKER_TYPE=demo
       - WORKER_MODEL=none
       - WORKER_SKILLS=python
+
+  validation-worker:
+    build:
+      context: ./workers/validation-worker
+    container_name: openclawbrain-validation-worker
+    ports:
+      - "8818:8818"
+    volumes:
+      - ./:/project
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WORKER_NAME=validation-worker
+      - WORKER_MODEL=none
+      - PROJECT_ROOT=/project
+      - WORKER_HOST=host.docker.internal
+      - TASK_TIMEOUT_SECONDS=120

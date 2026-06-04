@@ -37,5 +37,19 @@
     ],
     "cost_level": "free",
     "risk_level": "low"
+  },
+  "validation-worker": {
+    "type": "validation",
+    "endpoint": "http://localhost:8818/run-task",
+    "docker_service": "validation-worker",
+    "model": "none",
+    "skills": [
+      "validation",
+      "qa_gate",
+      "health_check",
+      "commit_advice"
+    ],
+    "cost_level": "free",
+    "risk_level": "medium"
   }
 }
